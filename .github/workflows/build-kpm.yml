@@ -18,12 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Clone KernelPatch SDK
-        run: |
-          git clone --depth=1 https://github.com/KernelPatch/KernelPatch.git
-          cd KernelPatch
-          git fetch --depth=1 origin 0ceeeb968bef86b48af68640af8b135215dc3399
-          git checkout 0ceeeb968bef86b48af68640af8b135215dc3399
+      - name: Checkout KernelPatch SDK
+        uses: actions/checkout@v4
+        with:
+          repository: bmax121/KernelPatch
+          path: KernelPatch
+          fetch-depth: 1
 
       - name: Set up Android NDK
         uses: nttld/setup-ndk@v1
