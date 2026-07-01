@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: bmax121/KernelPatch
-          path: KernelPatch
+          path: _kp
           fetch-depth: 1
 
       - name: Set up Android NDK
@@ -35,7 +35,7 @@ jobs:
         working-directory: sidechannel_bypass_kpm
         env:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
-          KP_DIR: ${{ github.workspace }}/KernelPatch
+          KP_DIR: ${{ github.workspace }}/_kp
         run: make
 
       - name: Upload artifact
