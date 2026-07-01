@@ -1,0 +1,45 @@
+name: Build sidechannel_bypass KPM
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "sidechannel_bypass_kpm/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "sidechannel_bypass_kpm/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clone KernelPatch SDK
+        run: |
+          git clone --depth=1 https://github.com/KernelPatch/KernelPatch.git
+          cd KernelPatch
+          git fetch --depth=1 origin 0ceeeb968bef86b48af68640af8b135215dc3399
+          git checkout 0ceeeb968bef86b48af68640af8b135215dc3399
+
+      - name: Set up Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r29
+
+      - name: Build
+        working-directory: sidechannel_bypass_kpm
+        env:
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+          KP_DIR: ${{ github.workspace }}/KernelPatch
+        run: make
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sidechannel_bypass_kpm
+          path: sidechannel_bypass_kpm/*.kpm
